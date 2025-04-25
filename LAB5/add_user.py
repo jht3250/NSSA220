@@ -1,29 +1,22 @@
 #!/usr/bin/env python3
 # filepath: c:\Users\4ujtr\OneDrive\RIT\NSSA220\LAB5\add_user.py
-
-"""
-Author: [Your Name]
-Date: April 24, 2025
-Description: Automates adding user accounts to a Linux system based on a CSV file.
-"""
+# Author: John Treon
+# This script adds users to the system based on a CSV file input.
 
 import os
 import csv
 import subprocess
 
 def clear_terminal():
-    """Clears the terminal screen."""
     os.system('clear')
 
 def create_group(group_name):
-    """Creates a group if it does not exist."""
     try:
         subprocess.run(['getent', 'group', group_name], check=True, stdout=subprocess.DEVNULL)
     except subprocess.CalledProcessError:
         subprocess.run(['groupadd', group_name])
 
 def add_user(username, group, home_dir, shell, password="password"):
-    """Adds a user to the system."""
     try:
         subprocess.run(['useradd', '-m', '-d', home_dir, '-s', shell, '-g', group, username], check=True)
         subprocess.run(['echo', f'{username}:{password}'], shell=True, stdout=subprocess.PIPE)
@@ -32,10 +25,9 @@ def add_user(username, group, home_dir, shell, password="password"):
         print(f"Error adding user {username}: {e}")
 
 def process_csv(file_path):
-    """Processes the CSV file and adds users."""
     print("Adding new users to the system.")
     print("Please Note: The default password for new users is password.")
-    print("For testing purposes. Change the password to 1$4pizz@.\n")
+    print("For testing purhjnposes. Change the password to 1$4pizz@.\n")
 
     try:
         with open(file_path, 'r') as csvfile:
@@ -50,8 +42,20 @@ def process_csv(file_path):
                     department = row.get('Department', '').strip().lower()
                     group = row.get('Group', '').strip().lower()
 
-                    if not employee_id or not first_name or not last_name or not department or not group:
-                        raise ValueError("Missing required fields.")
+                    missing_fields = []
+                    if not employee_id:
+                        missing_fields.append("EmployeeID")
+                    if not first_name:
+                        missing_fields.append("FirstName")
+                    if not last_name:
+                        missing_fields.append("LastName")
+                    if not department:
+                        missing_fields.append("Department")
+                    if not group:
+                        missing_fields.append("Group")
+                    
+                    if missing_fields:
+                        raise ValueError(f"Missing required field(s): {', '.join(missing_fields)}")
 
                     # Generate unique username
                     base_username = f"{first_name[0].lower()}{last_name.lower()}"
@@ -67,7 +71,10 @@ def process_csv(file_path):
 
                     # Determine home directory and shell
                     home_dir = f"/home/{department}/{username}"
-                    shell = '/bin/csh' if group == 'office' else '/bin/bash'
+                    if group == 'office':  
+                        shell = '/bin/csh'
+                    else:
+                        shell = '/bin/bash'
 
                     # Add user
                     add_user(username, group, home_dir, shell)
@@ -84,5 +91,5 @@ def process_csv(file_path):
 
 if __name__ == "__main__":
     clear_terminal()
-    csv_file_path = "linux_users.csv"  # Update this path if necessary
+    csv_file_path = "linux_users.csv"  
     process_csv(csv_file_path)
