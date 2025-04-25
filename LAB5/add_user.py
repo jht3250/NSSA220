@@ -6,20 +6,21 @@
 import os
 import csv
 import subprocess
+import time
 
 def clear_terminal():
     os.system('clear')
 
 def create_group(group_name):
     try:
-        subprocess.run(['getent', 'group', group_name], check=True, stdout=subprocess.DEVNULL)
+        subprocess.run(['getent', 'group', group_name], check=True)
     except subprocess.CalledProcessError:
         subprocess.run(['groupadd', group_name])
 
 def add_user(username, group, home_dir, shell, password="password"):
     try:
         subprocess.run(['useradd', '-m', '-d', home_dir, '-s', shell, '-g', group, username], check=True)
-        subprocess.run(['echo', f'{username}:{password}'], shell=True, stdout=subprocess.PIPE)
+        subprocess.run(['echo', f'{username}:{password}'], shell=True)
         subprocess.run(['passwd', '--expire', username], check=True)
     except subprocess.CalledProcessError as e:
         print(f"Error adding user {username}: {e}")
@@ -81,9 +82,11 @@ def process_csv(file_path):
 
                     # Display success message
                     print(f"Processing employee ID {employee_id:>8}. {username:>20} added to system.")
+                    time.sleep(1)
 
                 except ValueError as e:
                     print(f"Processing employee ID {row.get('EmployeeID', 'Unknown'):>8}. Skipping record due to error: {e}")
+                    time.sleep(1)
     except FileNotFoundError:
         print(f"File {file_path} not found.")
     except Exception as e:
