@@ -13,14 +13,14 @@ def clear_terminal():
 
 def create_group(group_name):
     try:
-        subprocess.run(['getent', 'group', group_name], check=True)
+        subprocess.run(['getent', 'group', group_name], check=True, stdout=subprocess.DEVNULL)
     except subprocess.CalledProcessError:
         subprocess.run(['groupadd', group_name])
 
 def add_user(username, group, home_dir, shell, password="password"):
     try:
         subprocess.run(['useradd', '-m', '-d', home_dir, '-s', shell, '-g', group, username], check=True)
-        subprocess.run(['echo', f'{username}:{password}'], shell=True)
+        subprocess.run(['echo', f'{username}:{password}'], shell=True, stdout=subprocess.PIPE)
         subprocess.run(['passwd', '--expire', username], check=True)
     except subprocess.CalledProcessError as e:
         print(f"Error adding user {username}: {e}")
