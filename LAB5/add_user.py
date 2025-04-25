@@ -33,6 +33,10 @@ def add_user(username, group, home_dir, shell, password="password"):
 
 def process_csv(file_path):
     """Processes the CSV file and adds users."""
+    print("Adding new users to the system.")
+    print("Please Note: The default password for new users is password.")
+    print("For testing purposes. Change the password to 1$4pizz@.\n")
+
     try:
         with open(file_path, 'r') as csvfile:
             reader = csv.DictReader(csvfile)
@@ -40,12 +44,13 @@ def process_csv(file_path):
             for row in reader:
                 try:
                     # Extract and validate fields
+                    employee_id = row.get('EmployeeID', '').strip()
                     first_name = row.get('FirstName', '').strip()
                     last_name = row.get('LastName', '').strip()
                     department = row.get('Department', '').strip().lower()
                     group = row.get('Group', '').strip().lower()
 
-                    if not first_name or not last_name or not department or not group:
+                    if not employee_id or not first_name or not last_name or not department or not group:
                         raise ValueError("Missing required fields.")
 
                     # Generate unique username
@@ -67,8 +72,11 @@ def process_csv(file_path):
                     # Add user
                     add_user(username, group, home_dir, shell)
 
+                    # Display success message
+                    print(f"Processing employee ID {employee_id:>8}. {username:>20} added to system.")
+
                 except ValueError as e:
-                    print(f"Skipping record due to error: {e}")
+                    print(f"Processing employee ID {row.get('EmployeeID', 'Unknown'):>8}. Skipping record due to error: {e}")
     except FileNotFoundError:
         print(f"File {file_path} not found.")
     except Exception as e:
