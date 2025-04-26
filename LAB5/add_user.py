@@ -5,6 +5,8 @@
 Author: John Treon
 Date: April 24, 2025
 Description: Automates adding user accounts to a Linux system based on a CSV file input.
+Usage: sudo python3 add_user.py
+Note: This script requires root privileges to add users and groups.
 """
 
 import os
@@ -93,6 +95,7 @@ def process_csv(file_path):
                     print(f"Processing employee ID {employee_id:>8}.\t  \033[32m{username:>20}\033[0m added to system.\n")
                     time.sleep(1)
 
+                # Display error message instead
                 except ValueError as e:
                     print(f"Processing employee ID {row.get('EmployeeID', 'Unknown'):>8}.\t\t \033[31m Skipping record due to error: {e}\033[0m\n")
                     time.sleep(1)
