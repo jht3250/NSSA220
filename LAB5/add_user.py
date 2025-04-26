@@ -7,6 +7,8 @@ import os
 import csv
 import subprocess
 import time
+import re
+
 
 def clear_terminal():
     os.system('clear')
@@ -61,6 +63,7 @@ def process_csv(file_path):
                     # Generate unique username
                     base_username = f"{first_name[0].lower()}{last_name.lower()}"
                     username = base_username
+                    username = re.sub(r"[^A-Za-z ]", "", username)
                     counter = 1
                     while username in usernames:
                         username = f"{base_username}{counter}"
