@@ -20,14 +20,14 @@ def clear_terminal():
 def create_group(group_name):
     group_check = os.system(f"getent group {group_name} > /dev/null 2>&1")
     if group_check != 0:  # Group does not exist
-        os.system(f"groupadd {group_name}")
+        os.system(f"groupadd {group_name} > /dev/null 2>&1")
 
 
 def add_user(username, group, home_dir, shell, password="password"):
     try:
-        os.system(f"useradd -m -d {home_dir} -s {shell} -g {group} {username}")
-        os.system(f"echo '{username}:{password}' | chpasswd")
-        os.system(f"passwd --expire {username}")
+        os.system(f"useradd -m -d {home_dir} -s {shell} -g {group} {username} > /dev/null 2>&1")
+        os.system(f"echo '{username}:{password}' | chpasswd > /dev/null 2>&1")
+        os.system(f"passwd --expire {username} > /dev/null 2>&1")
     except Exception as e:
         print(f"Error adding user {username}: {e}")
 
@@ -94,7 +94,7 @@ def process_csv(file_path):
                     time.sleep(1)
 
                 except ValueError as e:
-                    print(f"Processing employee ID {row.get('EmployeeID', 'Unknown'):>8}. \033[31m Skipping record due to error: {e}\033[0m")
+                    print(f"Processing employee ID {row.get('EmployeeID', 'Unknown'):>8}.\t \033[31m Skipping record due to error: {e}\033[0m")
                     time.sleep(1)
     except FileNotFoundError:
         print(f"File {file_path} not found.")
