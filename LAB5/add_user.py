@@ -56,7 +56,8 @@ def process_csv(file_path):
                         missing_fields.append("Department")
                     if not group:
                         missing_fields.append("Group")
-                    
+                    if group not in ['ceo', 'office', 'security']:
+                        raise ValueError(f"Invalid group: {group}.")
                     if missing_fields:
                         raise ValueError(f"Missing required field(s): {', '.join(missing_fields)}")
 
@@ -88,7 +89,7 @@ def process_csv(file_path):
                     time.sleep(1)
 
                 except ValueError as e:
-                    print(f"Processing employee ID {row.get('EmployeeID', 'Unknown'):>8}.\t \033[31m Skipping record due to error: {e}\033[0m")
+                    print(f"Processing employee ID {row.get('EmployeeID', 'Unknown'):>8}.\t  Skipping record due to error: {e}\033[0m")
                     time.sleep(1)
     except FileNotFoundError:
         print(f"File {file_path} not found.")
