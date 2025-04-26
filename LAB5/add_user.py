@@ -84,7 +84,7 @@ def process_csv(file_path):
                     add_user(username, group, home_dir, shell)
 
                     # Display success message
-                    print(f"Processing employee ID {employee_id:>8}.\t '\033[32m{username:>20}\033[0m' added to system.")
+                    print(f"Processing employee ID {employee_id:>8}.\t \033[32m{username:>20}\033[0m added to system.")
                     time.sleep(1)
 
                 except ValueError as e:
