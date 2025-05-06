@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 # filepath: c:\Users\4ujtr\OneDrive\RIT\NSSA220\LAB5\add_user.py
 
-"""
-Author: John Treon
-Date: April 24, 2025
-Description: Automates adding user accounts to a Linux system based on a CSV file input.
-Usage: sudo python3 add_user.py
-Note: This script requires root privileges to add users and groups.
-"""
+#
+# Author: John Treon
+# Date: April 24, 2025
+# Description: Automates adding user accounts to a Linux system based on a CSV file input.
+# Usage: sudo python3 add_user.py
+
 
 import os
 import csv
